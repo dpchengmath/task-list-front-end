@@ -1,4 +1,5 @@
 import TaskList from './components/TaskList.jsx';
+import { useState } from 'react';
 import './App.css';
 
 const TASKS = [
@@ -15,6 +16,8 @@ const TASKS = [
 ];
 
 const App = () => {
+  const [taskData, setTaskData] = useState(TASKS);
+  const toggleCompleteTask = (id) => {}
   return (
     <div className="App">
       <header className="App-header">

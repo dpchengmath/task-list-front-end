@@ -18,7 +18,7 @@ const TASKS = [
 const App = () => {
   const [taskData, setTaskData] = useState(TASKS);
 
-  const toggleCompleteTask = (id) => {
+  const clickCallback = (id) => {
     setTaskData(taskData => taskData.map(task => {
       if (task.id === id) {
         return {...task, isComplete: !task.isComplete};
@@ -28,7 +28,7 @@ const App = () => {
     }));
   };
 
-  const removeTask = (id) => {
+  const deleteCallback = (id) => {
     setTaskData(taskData => taskData.filter(task => {
       return task.id !== id;
     }));
@@ -43,8 +43,8 @@ const App = () => {
         <div>
           <TaskList
             tasks={taskData}
-            onTaskToggle={toggleCompleteTask}
-            onRemoveTask={removeTask}/>
+            onClickCallback={clickCallback}
+            onDeleteCallback={deleteCallback}/>
         </div>
       </main>
     </div>

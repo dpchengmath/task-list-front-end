@@ -2,22 +2,23 @@ import PropTypes from 'prop-types';
 import Task from './Task.jsx';
 import './TaskList.css';
 
-const TaskList = ({ tasks, onTaskToggle, onRemoveTask }) => {
-  const getTaskListJSX = (tasks) => {
-    return tasks.map((task) => {
-      return (
-        <Task
-          key={task.id}
-          id={task.id}
-          title={task.title}
-          isComplete={task.isComplete}
-          handleTaskToggle={onTaskToggle}
-          handleRemoveTask={onRemoveTask}
-        />
-      );
-    });
-  };
-  return <ul className="tasks__list no-bullet">{getTaskListJSX(tasks)}</ul>;
+const TaskList = ({ tasks, onClickCallback, onDeleteCallback }) => {
+  return(
+    <ul className="tasks__list no-bullet">
+      {tasks.map((task) => {
+        return (
+          <Task
+            key={task.id}
+            id={task.id}
+            title={task.title}
+            isComplete={task.isComplete}
+            handleClickCallback={onClickCallback}
+            handleDeleteCallback={onDeleteCallback}
+          />
+        );
+      })}
+    </ul>
+  );
 };
 
 TaskList.propTypes = {
@@ -28,8 +29,8 @@ TaskList.propTypes = {
       isComplete: PropTypes.bool.isRequired,
     })
   ).isRequired,
-  onTaskToggle: PropTypes.func.isRequired,
-  onRemoveTask: PropTypes.func.isRequired,
+  onClickCallback: PropTypes.func,
+  onDeleteCallback: PropTypes.func,
 };
 
 export default TaskList;

@@ -1,26 +1,16 @@
 import { useEffect, useState } from 'react';
-import { getTasks, updateTask, removeTask } from './api/utilityFunctions.js';
+import { getTasksFromAPI} from './api/utilityFunctions.js';
 import TaskList from './components/TaskList.jsx';
 import './App.css';
+import axios from 'axios';
 
-// const TASKS = [
-//   {
-//     id: 1,
-//     title: 'Mow the lawn',
-//     isComplete: false,
-//   },
-//   {
-//     id: 2,
-//     title: 'Cook Pasta',
-//     isComplete: true,
-//   },
-// ];
+const kBaseURL = 'http://127.0.0.1:5000';
 
 const App = () => {
   const [taskData, setTaskData] = useState([]);
 
   useEffect(() => {
-    getTasks()
+    getTasksFromAPI()
       .then((tasks) => {
         setTaskData(tasks);
       })
@@ -32,13 +22,12 @@ const App = () => {
   const clickCallback = (id, isComplete) => {
     console.log('Task clicked:', id, isComplete);
     const endpoint = isComplete ? 'mark_incomplete' : 'mark_complete';
-
-    updateTask(id, endpoint)
+    axios.patch(`${kBaseURL}/tasks/${id}/${endpoint}`)
       .then((response) => {
-        console.log('Task updated:', id);
+        console.log(response);
         setTaskData(taskData => taskData.map(task => {
-          if (task.id === response.id) {
-            return {...task, isComplete: response.is_complete};
+          if (task.id === response.data.task.id) {
+            return {...task, isComplete: response.data.task.is_complete};
           } else {
             return task;
           }
@@ -51,10 +40,10 @@ const App = () => {
 
   const deleteCallback = (id) => {
     console.log('Task deleted:', id);
-    removeTask(id)
+    axios.delete(`${kBaseURL}/tasks/${id}`)
       .then(() => {
-        console.log('Task removed:', id);
         setTaskData(taskData => taskData.filter(task => task.id !== id));
+        console.log('Task removed:', id);
       })
       .catch((error) => {
         console.log('Could not remove task:', error);

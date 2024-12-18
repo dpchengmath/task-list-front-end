@@ -1,31 +1,52 @@
+import { useEffect, useState } from 'react';
+import { getTasks, updateTask } from './api/utilityFunctions.js';
 import TaskList from './components/TaskList.jsx';
-import { useState } from 'react';
 import './App.css';
 
-const TASKS = [
-  {
-    id: 1,
-    title: 'Mow the lawn',
-    isComplete: false,
-  },
-  {
-    id: 2,
-    title: 'Cook Pasta',
-    isComplete: true,
-  },
-];
+// const TASKS = [
+//   {
+//     id: 1,
+//     title: 'Mow the lawn',
+//     isComplete: false,
+//   },
+//   {
+//     id: 2,
+//     title: 'Cook Pasta',
+//     isComplete: true,
+//   },
+// ];
 
 const App = () => {
-  const [taskData, setTaskData] = useState(TASKS);
+  const [taskData, setTaskData] = useState([]);
 
-  const clickCallback = (id) => {
-    setTaskData(taskData => taskData.map(task => {
-      if (task.id === id) {
-        return {...task, isComplete: !task.isComplete};
-      } else {
-        return task;
-      }
-    }));
+  useEffect(() => {
+    getTasks()
+      .then((tasks) => {
+        setTaskData(tasks);
+      })
+      .catch((error) => {
+        console.log('Could not get tasks:', error);
+      });
+  }, []);
+
+  const clickCallback = (id, isComplete) => {
+    console.log('Task clicked:', id, isComplete);
+    const endpoint = isComplete ? 'mark_incomplete' : 'mark_complete';
+
+    updateTask(id, endpoint)
+      .then((response) => {
+        console.log('Task updated:', id);
+        setTaskData(taskData => taskData.map(task => {
+          if (task.id === id) {
+            return {...task, isComplete: response.is_complete};
+          } else {
+            return task;
+          }
+        }));
+      })
+      .catch((error) => {
+        console.log('Could not update task:', error);
+      });
   };
 
   const deleteCallback = (id) => {

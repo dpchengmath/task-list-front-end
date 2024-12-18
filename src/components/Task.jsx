@@ -9,7 +9,7 @@ const Task = ({ id, title, isComplete, handleClickCallback, handleDeleteCallback
     <li className="tasks__item">
       <button
         className={`tasks__item__toggle ${buttonClass}`}
-        onClick={() => handleClickCallback(id)}
+        onClick={() => handleClickCallback(id, isComplete)}
       >
         {title}
       </button>

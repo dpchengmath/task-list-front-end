@@ -3,8 +3,19 @@ import { getTasksFromAPI} from './api/utilityFunctions.js';
 import TaskList from './components/TaskList.jsx';
 import './App.css';
 import axios from 'axios';
+import NewTaskForm from './components/NewTaskForm.jsx';
 
 const kBaseURL = 'http://127.0.0.1:5000';
+
+const convertFromApi = (apiTask) => {
+  const newTask = {
+    id: apiTask.id,
+    title: apiTask.title,
+    isComplete: apiTask.is_complete
+  };
+
+  return newTask;
+};
 
 const App = () => {
   const [taskData, setTaskData] = useState([]);
@@ -50,6 +61,13 @@ const App = () => {
       });
   };
 
+  const handleSubmit = (newTaskData) => {
+    axios.post(`${kBaseURL}/tasks`, newTaskData)
+      .then((response) => {
+        setTaskData((prevTasks) => [convertFromApi(response.data.task), ...prevTasks]);
+      })
+      .catch((error) => console.log(error));
+  };
   return (
     <div className="App">
       <header className="App-header">
@@ -57,6 +75,7 @@ const App = () => {
       </header>
       <main>
         <div>
+          <NewTaskForm handleSubmit={handleSubmit}/>
           <TaskList
             tasks={taskData}
             onClickCallback={clickCallback}

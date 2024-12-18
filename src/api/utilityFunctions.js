@@ -40,3 +40,14 @@ export const updateTask = (id, endpoint) => {
     });
 };
 
+export const removeTask = (id) => {
+  console.log('Removing task:', id);
+  return axios.delete(`${kBaseURL}/tasks/${id}`)
+    .then(() => {
+      console.log('Task removed:', id);
+    })
+    .catch((error) => {
+      console.log('Could not remove task:', error);
+    });
+};
+

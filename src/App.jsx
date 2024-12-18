@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getTasks, updateTask } from './api/utilityFunctions.js';
+import { getTasks, updateTask, removeTask } from './api/utilityFunctions.js';
 import TaskList from './components/TaskList.jsx';
 import './App.css';
 
@@ -37,7 +37,7 @@ const App = () => {
       .then((response) => {
         console.log('Task updated:', id);
         setTaskData(taskData => taskData.map(task => {
-          if (task.id === id) {
+          if (task.id === response.id) {
             return {...task, isComplete: response.is_complete};
           } else {
             return task;
@@ -50,9 +50,15 @@ const App = () => {
   };
 
   const deleteCallback = (id) => {
-    setTaskData(taskData => taskData.filter(task => {
-      return task.id !== id;
-    }));
+    console.log('Task deleted:', id);
+    removeTask(id)
+      .then(() => {
+        console.log('Task removed:', id);
+        setTaskData(taskData => taskData.filter(task => task.id !== id));
+      })
+      .catch((error) => {
+        console.log('Could not remove task:', error);
+      });
   };
 
   return (

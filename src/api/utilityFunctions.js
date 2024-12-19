@@ -27,4 +27,3 @@ export const getTasksFromAPI = () => {
       console.log('Could not fetch tasks:', error);
     });
 };
-
